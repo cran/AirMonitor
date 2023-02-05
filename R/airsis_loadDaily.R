@@ -6,6 +6,7 @@
 #' @param archiveBaseUrl Base URL for monitoring v2 data files.
 #' @param archiveBaseDir Local base directory for monitoring v2 data files.
 #' @param QC_negativeValues Type of QC to apply to negative values.
+#' @param QC_removeSuspectData Removes monitors determined to be misbehaving.
 #'
 #' @return A \emph{mts_monitor} object with AIRSIS data. (A list with
 #' \code{meta} and \code{data} dataframes.)
@@ -23,6 +24,16 @@
 #' For the most recent data in the last 10 days, use \code{airsis_loadLatest()}.
 #'
 #' For data extended more than 45 days into the past, use \code{airsis_loadAnnual()}.
+#'
+#' @note
+#' Some older AIRSIS timeseries contain only values of 0, 1000, 2000, 3000, ... ug/m3.
+#' Data from these deployments pass instrument-level QC checks but these
+#' timeseries generally do not represent valid data and should be removed.
+#' With \code{QC_removeSuspectData = TRUE} (the default), data is checked and
+#' periods reporting only values of 0:10 * 1000 ug/m3 are invalidated.
+#'
+#' Only those personally familiar with the individual instrument deployments
+#' should work with the "suspect" data.
 #'
 #' @seealso \code{\link{airsis_loadAnnual}}
 #' @seealso \code{\link{airsis_loadLatest}}
@@ -47,7 +58,8 @@ airsis_loadDaily <- function(
     "monitoring/v2"
   ),
   archiveBaseDir = NULL,
-  QC_negativeValues = c("zero", "na", "ignore")
+  QC_negativeValues = c("zero", "na", "ignore"),
+  QC_removeSuspectData = TRUE
 ) {
 
   parameterName <- "PM2.5"
@@ -139,20 +151,26 @@ airsis_loadDaily <- function(
 
   # ----- Apply QC -------------------------------------------------------------
 
+  # Handle negative values
   if ( QC_negativeValues == "zero" ) {
-
     monitor <- monitor_replaceValues(monitor, data < 0, 0)
-
   } else if ( QC_negativeValues == "na" ) {
-
     monitor <- monitor_replaceValues(monitor, data < 0, as.numeric(NA))
+  }
+
+  # NOTE:  Several monitors in 2015 have values only at 0, 1000, 2000, 3000, ...
+  if ( QC_removeSuspectData ) {
+
+    monitor <-
+      monitor %>%
+      monitor_mutate(QC_invalidateConsecutiveSuspectValues) %>%
+      monitor_dropEmpty()
 
   }
 
   # ----- Return ---------------------------------------------------------------
 
   return(monitor)
-
 
 }
 

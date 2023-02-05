@@ -83,7 +83,7 @@ monitor_nowcast <- function(
       stop("First argument is not a valid 'mts_monitor' object.")
   }, silent = TRUE)
 
-  if ( class(result) %in% "try-error" ) {
+  if ( "try-error" %in% class(result) ) {
     err_msg <- geterrmessage()
     if ( stringr::str_detect(err_msg, "object .* not found") ) {
       stop(paste0(err_msg, "\n(Did you forget to pass in the 'monitor' object?)"))
@@ -139,7 +139,7 @@ monitor_nowcast <- function(
     firstHr <- numHrs
   }
 
-  # Start at the end end of the data (most recent hour) and work backwards
+  # Start at the end of the data (most recent hour) and work backwards
   # The oldest hour for which we can calculate nowcast is numHrs, unless
   # includeShortTerm = TRUE, in which case we can go back to the 2nd hour.
 
@@ -159,7 +159,7 @@ monitor_nowcast <- function(
       # If the current hour is missing, no valid Nowcast will be reported
 
       # NOTE:  This conflicts with the algorithm as described here:
-      # NOTE:    https://www3.epa.gov/airnow/ani/pm25_aqi_reporting_nowcast_overview.pdf
+      # NOTE:    https://forum.airnowtech.org/t/daily-and-hourly-aqi-pm2-5/171
       # NOTE:
       # NOTE:  But experience shows that NowCast replacements for missing
       # NOTE:  PM2.5 values are very problematic.

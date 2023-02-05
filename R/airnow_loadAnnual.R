@@ -4,10 +4,10 @@
 #' @title Load annual AirNow monitoring data
 #'
 #' @param year Year [YYYY].
-#' @param parameterName One of the EPA AQS criteria parameter names.
 #' @param archiveBaseUrl Base URL for monitoring v2 data files.
 #' @param archiveBaseDir Local base directory for monitoring v2 data files.
 #' @param QC_negativeValues Type of QC to apply to negative values.
+#' @param parameterName One of the EPA AQS criteria parameter names.
 #'
 #' @return A \emph{mts_monitor} object with AirNow data. (A list with
 #' \code{meta} and \code{data} dataframes.)

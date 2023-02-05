@@ -1,13 +1,78 @@
+# AirMonitor 0.3.9
+
+* Tweaks to pass CRAN checks.
+
+# AirMonitor 0.3.8
+
+* Fixed a bug in `monitor_loadAnnual()` when loading years before the first year
+of AirNow data.
+* Updated `NW_Megafires` dataset to combine data from EPA AQS, AirNow and WRCC.
+* Various improvements to examples used in documentation
+* Edited the old "NowCast" article for inclusion.
+
+# AirMonitor 0.3.7
+
+* Added `epa_aqs_loadAnnual()`.
+* Updated `monitor_loadAnnual()` to load `epa_aqs` data.
+* Added `epaPreference` argument to `monitor_load()`.
+* Updated `monitor_combine()` with an `overlapStrategy` argument. With
+`overlapStrategy = "replace all"`, values from later timeseries (including `NA`)
+always replace values from earlier timeseries. With `overlapStrategy = "replace na"`, 
+values from later timeseries only replace `NA` values in earlier timeseries.
+
+# AirMonitor 0.3.6
+
+* Updated vignettes.
+* Updated `NW_Megafires` dataset from corrected database.
+* Added "Save Data as CSV" article.
+
+# AirMonitor 0.3.5
+
+* Now depending on **MazamaTimeSeries** 0.2.8 for the `mts_selectWhere()` function.
+* Updated data sets with latest version of the data.
+
+# AirMonitor 0.3.4
+
+* Improved logic for `QC_removeSuspectData` argument to `airsis_load~()` and
+`wrcc_load~() functions.
+* Added `QC_invalidateConsecutiveSuspectValues()` function.
+
+# AirMonitor 0.3.3
+
+* Added `QC_removeSuspectData = TRUE` argument to `airsis_load~()` and
+`wrcc_load~() functions to remove those monitors that have values of 2000 ug/m3. 
+A review of the data from AIRSIS and WRCC shows some archival time series 
+(2015, 2016, 2020) where all values are one of 0, 1K, 2K, 3K, 4K, 5K.
+
+# AirMonitor 0.3.2
+
+* Added `monitor_selectWhere()` for data based selection.
+
+# AirMonitor 0.3.1
+
+* Updated `monitor_toPWFSLSmoke()` and `monitor_fromPWFSLSmoke()` to support
+the `fullAQSID field`
+* Updated `monitor_filterDate()` and `monitor_filterDatetime()` to allow one-sided
+filtering when passing in only a single `startdate` or `endddate` argument.
+
+# AirMonitor 0.3.0
+
+Version 0.3 works with data built using a new `fullAQSID` field available from 
+AirNow. This unique identifier is more consistent and should be better supported
+in the future than the older `AQSID` field.
+
+This change requires a few minor changes mostly in function examples.
+
 # AirMonitor 0.2.2
 
-CRAN test fixes:
+CRAN fixes:
 
 * Guarantee that every plotting function documents the return value.
 * Updated references for AQI and NowCast algorithms.
 
 # AirMonitor 0.2.1
 
-CRAN test fixes:
+CRAN fixes:
 
 * Removed `simplfy = TRUE` from calls to `base::apply()` as this is the default.
 * Replaced URL reference for AQI breaks to point to AirNow.

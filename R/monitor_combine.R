@@ -4,7 +4,9 @@
 #'
 #' @param ... Any number of valid emph{mts_monitor} objects or a list of objects.
 #' @param replaceMeta Logical specifying whether to allow replacement of metadata
-#' associated with \code{deviceDeploymentIDs}.
+#' associated when duplicate \code{deviceDeploymentIDs} are encountered.
+#' @param overlapStrategy Strategy to use when data found in time series
+#' overlaps.
 #'
 #' @return A combined \code{mts_monitor} object. (A list with
 #' \code{meta} and \code{data} dataframes.)
@@ -22,35 +24,45 @@
 #' non-identical metadata for the same \code{deviceDeploymentID} unless
 #' \code{replaceMeta = TRUE}.
 #'
-#' @note Data are combined with a "latest is best" sensibility where any
+#' @note Data are combined with a "later is better" sensibility where any
 #' data overlaps exist. Incoming \emph{mts_monitor} objects are ordered based on the
 #' time stamp of their last record. Any data records found in a "later" \emph{mts_monitor}
 #' will overwrite data associated with an "earlier" \emph{mts_monitor}.
+#'
+#' With \code{overlapStrategy = "replace all"}, any data records found
+#' in "later" \emph{mts_monitor} objects are preferentially retained before the "shared"
+#' data are finally reordered by ascending \code{datetime}.
+#'
+#' With \code{overlapStrategy = "replace missing"}, only missing values in "earlier"
+#' \emph{mts_monitor} objects are replaced with data records from "later" time series.
 #'
 #'
 #' @examples
 #' library(AirMonitor)
 #'
-#' # Washington State University
-#' Pullman <-
-#'   NW_Megafires %>%
-#'   monitor_select("089a067f92712ad1_530750003") %>%
-#'   monitor_filterDatetime(2015080118, 2015080203)
+#' # Two monitors near Pendelton, Oregon
+#' #
+#' # Use the interactive map to get the deviceDeploymentIDs
+#' #   NW_Megafires %>% monitor_leaflet()
 #'
-#' # University of Idaho
-#' Moscow <-
+#' Pendleton_West <-
 #'   NW_Megafires %>%
-#'   monitor_select("d121a99bc6c2ac7f_160570005") %>%
-#'   monitor_filterDatetime(2015080200, 2015080206)
+#'   monitor_select("f187226671d1109a_410590121_03") %>%
+#'   monitor_filterDatetime(2015082300, 2015082305)
 #'
-#' monitor_combine(Pullman, Moscow) %>%
+#' Pendleton_East <-
+#'   NW_Megafires %>%
+#'   monitor_select("6c906c6d1cf46b53_410597002_02") %>%
+#'   monitor_filterDatetime(2015082300, 2015082305)
+#'
+#' monitor_combine(Pendleton_West, Pendleton_East) %>%
 #'   monitor_getData()
-#'
 #'
 
 monitor_combine <- function(
   ...,
-  replaceMeta = FALSE
+  replaceMeta = FALSE,
+  overlapStrategy = c("replace all", "replace na")
 ) {
 
   # Accept any number of monitor objects
@@ -61,10 +73,17 @@ monitor_combine <- function(
   if ( length(monitorList) == 0 )
     stop("no 'monitor' arguments provided")
 
+  overlapStrategy <- match.arg(overlapStrategy)
+
   # ----- Call MazamaTimeSeries function ---------------------------------------
 
   result <- try({
-    monitor <- MazamaTimeSeries::mts_combine(..., replaceMeta = replaceMeta)
+    monitor <-
+      MazamaTimeSeries::mts_combine(
+        ...,
+        replaceMeta = replaceMeta,
+        overlapStrategy = overlapStrategy
+      )
   }, silent = TRUE)
 
   # Handle errors

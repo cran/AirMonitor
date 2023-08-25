@@ -1,6 +1,6 @@
 Type: Package
 Package: AirMonitor
-Version: 0.3.11
+Version: 0.3.12
 Title: Air Quality Data Analysis
 Authors@R: c(
     person("Jonathan", "Callahan", email="jonathan.s.callahan@gmail.com", role=c("aut","cre")),
@@ -31,10 +31,10 @@ LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2023-05-10 16:16:51 UTC; jonathancallahan
+Packaged: 2023-08-25 19:09:54 UTC; jonathancallahan
 Author: Jonathan Callahan [aut, cre],
   Spencer Pease [ctb],
   Hans Martin [ctb],
   Rex Thompson [ctb]
 Repository: CRAN
-Date/Publication: 2023-05-10 17:20:02 UTC
+Date/Publication: 2023-08-25 21:40:07 UTC

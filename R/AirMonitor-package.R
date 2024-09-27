@@ -1,7 +1,7 @@
-#'
-#' @docType package
-#' @name AirMonitor
-#' @aliases AirMonitor-package
+#' @keywords internal
+"_PACKAGE"#'
+
+#' @name AirMonitor-package
 #' @title Air Quality Data Analysis
 #' @description
 #' \code{
@@ -228,11 +228,10 @@ US_52 <- c(
 #'
 #' Currently supported languages include English (eng) and Spanish (spa).
 #'
-#' AQI breaks are defined at
-#' \url{https://www.airnow.gov/sites/default/files/2020-05/aqi-technical-assistance-document-sept2018.pdf}
+#' AQI breaks and colors are defined at
+#' \url{https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf}
 #' and are given in units appropriate for each pollutant.
 #'
-#' AQI colors are defined at \url{https://docs.airnowapi.org/aq101}
 #' @note
 #' The low end of each break category is used as the breakpoint.
 #'

@@ -103,7 +103,7 @@ monitor_leaflet <- function(
   maptype = "terrain",
   extraVars = NULL,
   jitter = 5e-4,
-  NAAQS = c("PM2.5", "PM2.5_2024"),
+  NAAQS = c("PM2.5_2024", "PM2.5"),
   ...
 ) {
 
@@ -135,7 +135,7 @@ monitor_leaflet <- function(
 
   # ----- Pollutant dependent AQI ----------------------------------------------
 
-  # See: https://www.airnow.gov/sites/default/files/2020-05/aqi-technical-assistance-document-sept2018.pdf
+  # See: https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf
 
   pollutant <- toupper(unique(monitor$meta$pollutant))
   if ( length(pollutant) > 1 ) {
@@ -268,7 +268,9 @@ monitor_leaflet <- function(
 
         slice <- which(monitor$data$datetime == sliceTime)
 
-        popupValue <- as.numeric(dplyr::slice(monitor$data, slice)[-1])
+        popupValue <-
+          as.numeric(dplyr::slice(monitor$data, slice)[-1]) %>%
+          round(digits = 1)
 
         popupWhen <-
           strftime(monitor$data$datetime[slice], "on %B %d, %Y at %H:00", tz = "UTC", usetz = TRUE)
@@ -334,7 +336,7 @@ monitor_leaflet <- function(
     }
 
     # Create levels and use them to create a color mask
-    levels <- .bincode(popupValue, breaks, include.lowest = TRUE)
+    levels <- .bincode(popupValue, breaks, right = TRUE, include.lowest = TRUE)
     if ( !all(!is.na(levels)) ) {
       print("NOTE that there are data points outside of your specified breaks, non-requested color(s) might be displayed on your map.")
     }

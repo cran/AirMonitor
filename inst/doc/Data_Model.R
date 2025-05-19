@@ -1,4 +1,4 @@
-## ---- echo=FALSE--------------------------------------------------------------
+## ----echo=FALSE---------------------------------------------------------------
 knitr::opts_chunk$set(fig.width = 7, fig.height = 5)
 
 ## ----data_model_1-------------------------------------------------------------
@@ -22,7 +22,7 @@ monitor <-
 # 'mts_monitor' objects can be identified by their class
 class(monitor)
 
-# They alwyas have two elements called 'meta' and 'data'
+# They always have two elements called 'meta' and 'data'
 names(monitor)
 
 # Examine the 'meta' dataframe
